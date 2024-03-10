@@ -1,7 +1,8 @@
 package com.example.testdrivenstudy.product;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /*
 변수에 final 키워드 변경이 필요 없는 변수를 불변으로 만듬
@@ -10,17 +11,11 @@ import org.junit.jupiter.api.Test;
 단축키 select refactoring F6
 */
 
+@SpringBootTest
 class ProductServiceTest {
-    private ProductService productService;
-    private ProductPort productPort;
-    private ProductRepository productRepository;
 
-    @BeforeEach
-    void setUp() {
-        productRepository = new ProductRepository();
-        productPort = new ProductAdapter(productRepository);
-        productService = new ProductService(productPort);
-    }
+    @Autowired
+    private ProductService productService;
 
     @Test
     void 상품등록(){
