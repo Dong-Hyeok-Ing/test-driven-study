@@ -1,8 +1,15 @@
 package com.example.testdrivenstudy.product;
 
+import com.example.testdrivenstudy.ApiTest;
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /*
 변수에 final 키워드 변경이 필요 없는 변수를 불변으로 만듬
@@ -11,11 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 단축키 select refactoring F6
 */
 
-@SpringBootTest
-class ProductServiceTest {
+class ProductApiTest extends ApiTest {
 
-    @Autowired
-    private ProductService productService;
 
     @Test
     void 상품등록(){
@@ -28,7 +32,16 @@ class ProductServiceTest {
         final 변수에서 command alt M 으로 밖으로 뺌 -> 상풍등록요청_생성()
         */
         final AddProductRequest request = 상풍등록요청_생성();
-        productService.addProduct(request);
+        //API 요청
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/products")
+                .then()
+                .log().all().extract();
+
+        assertThat(response.statusCode(), is(HttpStatus.CREATED.value()));
     }
 
     private static AddProductRequest 상풍등록요청_생성() {
